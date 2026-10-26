@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Winding route ribbon in teal -->
+    <path
+        android:strokeColor="#14B8A6"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M30,76 C38,76 40,64 54,64 C68,64 70,50 78,50" />
+    <!-- Route dashes -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M34,76 L40,74 M48,68 L54,64 M62,58 L68,53 M74,51 L77,50" />
+    <!-- Motorcycle Silhouette in White/Amber -->
+    <!-- Rear wheel -->
+    <path
+        android:strokeColor="#F59E0B"
+        android:strokeWidth="3"
+        android:fillColor="#00000000"
+        android:pathData="M38,58 A6,6 0 1,0 38,46 A6,6 0 1,0 38,58 Z" />
+    <!-- Front wheel -->
+    <path
+        android:strokeColor="#F59E0B"
+        android:strokeWidth="3"
+        android:fillColor="#00000000"
+        android:pathData="M70,58 A6,6 0 1,0 70,46 A6,6 0 1,0 70,58 Z" />
+    <!-- Chassis, fuel tank, handle and seat -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,52 L46,52 L54,44 L60,44 L67,52 L64,52 L58,46 L50,46 L44,52 Z" />
+    <!-- Handlebar and rider helmet marker -->
+    <path
+        android:strokeColor="#14B8A6"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M59,44 L62,38 L65,39" />
+    <path
+        android:fillColor="#F8FAFC"
+        android:pathData="M52,38 A3.5,3.5 0 1,0 52,31 A3.5,3.5 0 1,0 52,38 Z" />
+    <!-- Waypoint pin at destination -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M78,44 C76,44 74,46 74,48 C74,51 78,56 78,56 C78,56 82,51 82,48 C82,46 80,44 78,44 Z" />
+</vector>

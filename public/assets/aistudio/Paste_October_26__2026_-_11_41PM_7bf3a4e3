@@ -1,0 +1,853 @@
+You are a senior full-stack software engineer, mobile app developer, UI/UX designer, database architect, and product designer. Your task is to BUILD a complete, functional, modern biker community application named NEO. Do not merely explain how to build it, produce a static mockup, or provide a product proposal. Create the actual working application in the available project workspace, run it where supported, test the main user journeys, and fix errors.
+
+# 1. PRODUCT IDENTITY
+
+App name: NEO
+Tagline: Ride Together. Discover More.
+Product: Motorcycle rider matching, shared-trip planning, local biker communities, and group ride discovery.
+
+NEO solves a common problem: motorcycle riders want to travel with other riders but cannot always find someone travelling in the same direction, on compatible dates, and with similar riding preferences. NEO also helps riders discover local biker clubs, form communities, organise events, and make lasting connections through shared rides.
+
+The product must feel like a premium, modern motorcycle touring platform: adventurous, trustworthy, welcoming, practical, and simple to use.
+
+# 2. IMPORTANT BUILD INSTRUCTIONS
+
+- Build the actual application, not just a landing page, design concept, or static demo.
+- Inspect the existing project and preserve useful code where possible.
+- Use the framework and conventions supported by the current Google AI Studio environment. If a project already exists, adapt to its stack rather than replacing everything unnecessarily.
+- If the project is empty, create a suitable modern web application using React, TypeScript, and a responsive UI framework or well-organised CSS.
+- If a mobile application cannot be built directly in the current environment, create a polished, mobile-first, installable-feeling responsive web app/PWA that can later be adapted into a native mobile application.
+- Use reusable components, clean architecture, understandable naming, sensible error handling, and maintainable code.
+- Build every major screen and make every visible button, menu, filter, tab, form, and primary action functional.
+- Do not leave buttons that do nothing, fake loading screens, placeholder links, or decorative controls pretending to be functional.
+- Do not claim an integration works unless it has been configured and tested.
+- Run the application and resolve compilation errors and major runtime errors before considering the task complete.
+- If a third-party API, key, or service is unavailable, create a clear setup instruction and a working fallback. Never expose secrets in frontend code.
+- Start by establishing a concise implementation plan, then proceed with implementation without stopping for unnecessary approval.
+- If the available context is limited, prioritise a working end-to-end MVP first, then complete the remaining features systematically.
+
+# 3. TECHNOLOGY AND ARCHITECTURE
+
+Prefer:
+- Frontend: React + TypeScript.
+- UI: responsive, accessible components and consistent design tokens.
+- Backend: a secure server-side API.
+- Database: a relational database suitable for users, rides, communities, requests, events, messages, and reports.
+- Authentication: secure authentication with persistent sessions.
+- Maps: integrate a suitable mapping/geocoding provider only after configuring its API key and terms.
+- Notifications: in-app notifications first; push notifications when the required service is configured.
+- Deployment: provide environment-variable documentation and production setup instructions.
+
+If the available environment supports Firebase, consider Firebase Authentication, Firestore, Storage, and Cloud Functions. Alternatively, use a suitable SQL backend such as PostgreSQL with a secure API. Choose one coherent architecture; do not mix multiple competing backends unnecessarily.
+
+For local development, use seeded demo data so the application can be explored immediately. Keep demo mode clearly identified. Persist data in a real backend when configured. Local storage or IndexedDB may be used for preferences and temporary drafts, but do not treat browser storage as a secure production database.
+
+# 4. VISUAL DESIGN AND BRANDING
+
+Create a distinctive NEO visual identity.
+
+Design direction:
+- Premium motorcycle touring aesthetic.
+- Dark charcoal/navy, off-white, and restrained teal accents.
+- Optional amber accent for calls to action or travel highlights.
+- Strong typography, clean layouts, rounded cards, subtle shadows, tasteful transitions, and high-quality motorcycle/travel imagery.
+- A modern, confident, adventure-focused appearance without excessive visual clutter.
+- Consistent spacing, buttons, form fields, icons, cards, navigation, and modal styles.
+- Support light/dark themes if practical.
+- Meet basic accessibility requirements: readable contrast, keyboard navigation, visible focus states, labelled inputs, and screen-reader-friendly controls.
+- Do not copy another brand's identity.
+
+Use a responsive layout:
+- Desktop: sidebar or spacious navigation and a well-organised main content area.
+- Mobile: compact top bar, touch-friendly controls, and bottom navigation where appropriate.
+- Avoid overflowing content, tiny buttons, excessive filters, or long registration forms.
+
+Brand identity:
+NEO
+Ride Together. Discover More.
+
+Create a simple logo using a clean NEO wordmark and, if appropriate, a subtle road, route, or wheel motif.
+
+# 5. USER ACCOUNTS AND ONBOARDING
+
+Implement:
+- Sign up.
+- Login.
+- Logout.
+- Account recovery where supported.
+- Profile editing.
+- Session persistence.
+- Account deletion or a documented deletion-request process.
+- Terms and Privacy Notice acceptance.
+- Appropriate validation and helpful error messages.
+
+Rider profile fields:
+- Display name.
+- Profile photo.
+- Short bio.
+- Home city or approximate region.
+- Languages.
+- Motorcycle make/model, optional.
+- Riding experience, optional.
+- Preferred riding pace.
+- Riding interests.
+- Preferred trip types.
+- Preferred departure times.
+- Community memberships.
+- Verification status, if a real verification process is implemented.
+
+Allow users to control which profile fields are visible to other riders.
+
+Do not invent identity verification. Distinguish verified contact information from verified identity.
+
+# 6. HOME SCREEN
+
+Create a polished dashboard with the following sections:
+
+A. Welcome section
+- Personalised greeting.
+- NEO branding.
+- Notifications icon.
+- Profile shortcut.
+
+B. Main ride search card
+- Starting location.
+- Destination.
+- Departure date.
+- Optional flexible dates.
+- Primary button: Find My Ride Partner.
+
+C. Quick actions
+- Find a Ride.
+- Create a Ride.
+- Explore Communities.
+- Upcoming Events.
+
+D. Recommended rides
+- Relevant active rides.
+- Route and date summaries.
+- Organiser profile.
+- Available spaces.
+- Clear Request to Join action.
+
+E. Nearby communities
+- Community cards based on selected city or region.
+- Group type, description, and upcoming activity.
+
+F. Upcoming events
+- Local rides and meetups.
+- Dates, approximate meeting location, and RSVP status.
+
+G. Useful empty states
+If the user has no rides, requests, messages, or memberships, explain what to do next and provide a clear action.
+
+Do not show fabricated real-world availability. Seeded sample data must be clearly identified as demo content.
+
+# 7. FEATURE ONE: NEO SMART ROUTE MATCH
+
+This is one of NEO's most important features.
+
+Allow riders to:
+- Search by origin and destination.
+- Select departure dates or flexible date windows.
+- Filter by trip type.
+- Filter by preferred pace.
+- Filter by group size.
+- Filter by riding experience preference.
+- View available partner slots.
+- View route notes and planned stops.
+- Request to join a trip.
+- Save a ride for later.
+
+Matching logic:
+1. Compare origin and destination.
+2. Compare departure dates and time windows.
+3. Compare available route information when present.
+4. Compare rider preferences.
+5. Rank and explain suitable results.
+6. Allow matching with a rider travelling along a shared segment, not only to the same final destination.
+
+Example:
+Rider A wants to travel from Nashik to Goa.
+Rider B wants to travel from Pune to Goa.
+If their routes and departure windows are compatible, suggest a possible meeting point or overlapping trip.
+
+Start with reliable destination/date matching if route geometry is unavailable. Add actual route-overlap calculations only when a configured mapping provider supplies suitable route data.
+
+Never invent route overlap percentages, travel times, map results, or meeting-point recommendations. When data is insufficient, show an honest compatibility summary rather than a fabricated score.
+
+Display:
+- Route summary.
+- Departure window.
+- Planned stops.
+- Organiser details.
+- Riding preferences.
+- Group size.
+- Match explanation.
+- Request to Join button.
+
+# 8. FEATURE TWO: CREATE AND MANAGE RIDES
+
+Provide a complete Create Ride form.
+
+Required fields:
+- Ride title.
+- Starting location.
+- Destination.
+- Departure date and time.
+- Available participant capacity.
+- Trip visibility.
+- Basic trip description.
+
+Optional fields:
+- Planned stops.
+- Route notes.
+- Estimated distance and travel duration from a reliable provider, if configured.
+- Riding pace.
+- Trip type.
+- Preferred experience.
+- Food and fuel break notes.
+- Return plan.
+- Meeting point.
+- Ride rules.
+- Cover image.
+
+Visibility options:
+- Public.
+- Community-only.
+- Invite-only.
+
+Organiser functions:
+- Publish a ride.
+- Edit details.
+- Pause a listing.
+- Cancel a ride.
+- View join requests.
+- Accept or decline requests.
+- Manage confirmed participants.
+- Notify participants when important details change.
+- Mark a ride as completed.
+
+Business rules:
+- Reject invalid or past departure dates.
+- Prevent duplicate active requests.
+- Enforce participant capacity on the server.
+- Restrict editing and participant management to authorised organisers.
+- Exclude cancelled rides from active search results.
+- Preserve a clear status for pending, accepted, declined, cancelled, and completed rides.
+
+# 9. FEATURE THREE: MEET-IN-THE-MIDDLE FINDER
+
+Build NEO's distinctive meeting-point feature.
+
+When riders have compatible routes:
+- Identify shared route segments when actual route geometry is available.
+- Suggest practical public meeting points along the shared segment.
+- Consider the departure time and the planned route if reliable data exists.
+- Allow participants to review and agree on a meeting point.
+- Allow organisers to choose a different meeting point.
+- Clearly label suggestions as estimates until confirmed.
+
+If route geometry or reliable map data is unavailable, provide a manual meeting-point field instead of generating false recommendations.
+
+Do not expose users' home addresses or exact live locations.
+
+# 10. FEATURE FOUR: LOCAL BIKER COMMUNITIES AND RIDE CIRCLES
+
+Users should be able to discover, create where permitted, join, and leave motorcycle communities.
+
+Example categories:
+- City biker clubs.
+- Weekend riders.
+- Long-distance touring.
+- Scenic and mountain rides.
+- Beginner-friendly groups.
+- Adventure touring.
+- Classic motorcycle communities.
+- Sunrise rides.
+- Touring and travel photography.
+
+Community features:
+- Name and description.
+- Cover image.
+- Approximate location.
+- Community rules.
+- Membership type.
+- Admin and moderator information.
+- Member list subject to privacy settings.
+- Upcoming rides.
+- Event calendar.
+- Announcements.
+- Optional discussion feed.
+- Membership requests.
+- Join/leave controls.
+- Report community or content.
+- Community-specific group chat where supported.
+
+Membership modes:
+- Open: join immediately.
+- Approval required: send a membership request.
+- Invite-only: access by invitation.
+
+Community admin permissions:
+- Approve and decline requests.
+- Publish announcements.
+- Create events.
+- Moderate community content.
+- Remove members when justified.
+- Update community rules.
+
+Prevent users from performing admin actions without permission.
+
+Begin with curated or admin-approved public community creation if moderation tools are not yet mature.
+
+# 11. FEATURE FIVE: FROM STRANGER TO RIDING CIRCLE
+
+After a shared ride is marked completed, offer participants the option to:
+- Leave respectful feedback.
+- Save the route to their ride history.
+- Join a community together.
+- Create a recurring ride circle.
+- Organise another trip.
+
+Do not automatically enrol users in groups. Ask for consent.
+
+# 12. FEATURE SIX: RIDE BUDDY COMPATIBILITY
+
+Let riders state their preferences:
+- Relaxed touring or frequent stops.
+- Early morning or daytime departures.
+- Scenic trips or direct journeys.
+- Short trips or multi-day touring.
+- Preferred group size.
+- Experience preferences.
+- Food and sightseeing stops.
+
+Show a simple compatibility summary based on shared preferences.
+
+Explain the factors behind the recommendation. Never represent compatibility as proof of personality, riding skill, identity, or safety.
+
+# 13. FEATURE SEVEN: RIDE PLANNER
+
+Provide a structured trip-planning experience.
+
+Features:
+- Origin and destination.
+- Date and time.
+- Planned stops.
+- Meeting points.
+- Fuel and food breaks.
+- Estimated distance and duration when sourced from a reliable service.
+- Trip notes.
+- Participant list.
+- Pre-ride checklist.
+- Optional day-by-day itinerary for multi-day journeys.
+- Shareable trip summary for accepted participants.
+
+Checklist examples:
+- Check motorcycle condition.
+- Confirm protective gear.
+- Check weather and road information.
+- Plan rest and fuel stops.
+- Confirm meeting point.
+- Tell a trusted person about the trip.
+
+Do not encourage speeding, fatigue, dangerous challenges, or riding beyond a person's ability.
+
+# 14. FEATURE EIGHT: OPEN RIDES AND SPONTANEOUS RIDE MODE
+
+Support both planned and short-notice trips.
+
+Allow riders to publish:
+- A long-distance trip.
+- A weekend ride.
+- A same-day local ride.
+- A trip with available seats or participant slots.
+- A ride with a defined departure window.
+
+Show the organiser's stated departure time and meeting point. Let interested riders request to join.
+
+Never imply that a rider is available unless an active ride listing or explicit availability record confirms it.
+
+# 15. FEATURE NINE: RIDE PASSPORT AND ACHIEVEMENTS
+
+Create a personal ride history with:
+- Completed rides.
+- Visited places.
+- Participated-in community events.
+- Ride photographs.
+- Optional route memories.
+- Community contribution achievements.
+
+Possible badges:
+- First Community Ride.
+- Weekend Explorer.
+- Community Contributor.
+- Scenic Route Explorer.
+- Five Completed Group Rides.
+
+Only award badges when the corresponding event is recorded. Do not reward speed, risky riding, or excessive distance.
+
+Allow users to control what appears publicly on their profile.
+
+# 16. FEATURE TEN: BIKER SPOT FINDER
+
+Provide a discoverable directory for:
+- Fuel stations.
+- Motorcycle repair shops.
+- Biker-friendly cafés.
+- Public meeting points.
+- Scenic viewpoints.
+- Touring destinations.
+- Community meetups.
+
+Use a configured maps/places provider or verified, appropriately sourced community submissions.
+
+Support:
+- Search by area.
+- Category filters.
+- Map and list views if the provider supports them.
+- Place details.
+- Save to favourites.
+- Suggest an edit or report incorrect information.
+
+Do not fabricate business listings, ratings, opening hours, or route details.
+
+# 17. FEATURE ELEVEN: EVENTS
+
+Community admins and authorised organisers can create events with:
+- Event title.
+- Description.
+- Date and time.
+- Meeting point.
+- Capacity.
+- Organiser.
+- Audience and visibility.
+- Optional route plan.
+- Event rules.
+
+Users can:
+- Browse upcoming events.
+- View event details.
+- RSVP as Going or Not Going.
+- Cancel their RSVP.
+- View their own upcoming events.
+- Receive notifications when events are changed or cancelled.
+- Report inappropriate events.
+
+Enforce capacity and membership permissions on the server.
+
+# 18. FEATURE TWELVE: MESSAGING
+
+Implement:
+- Conversation list.
+- Direct messaging after an accepted ride request or explicit mutual consent.
+- Group chat for confirmed ride participants.
+- Community chat if enabled.
+- Message timestamps.
+- Read state where practical.
+- Mute conversation.
+- Block user.
+- Report message.
+- Pinned ride details in relevant group conversations.
+
+Security requirements:
+- Only authorised participants may read a conversation.
+- Server-side permissions must be enforced.
+- Blocked users must not be able to start new chats or deliver messages to the blocker.
+- Handle message failures gracefully.
+- Do not expose private contact details without consent.
+
+If full real-time messaging requires an external service, implement a coherent backend approach and document any configuration needed. Do not simulate sent messages as if they were successfully delivered.
+
+# 19. FEATURE THIRTEEN: NOTIFICATIONS
+
+Provide an in-app notification centre for:
+- Join requests received.
+- Join request accepted or declined.
+- Community membership approved or declined.
+- Ride details changed.
+- Ride cancelled.
+- Event changed or cancelled.
+- New authorised messages.
+- Community announcements.
+
+Include:
+- Read/unread state.
+- Mark as read.
+- Notification preferences.
+- Deep links to the related screen.
+- Push notifications when properly configured.
+
+Avoid unnecessary or repetitive notifications.
+
+# 20. FEATURE FOURTEEN: SAFETY AND TRUST
+
+Safety must be built into the MVP.
+
+Implement:
+- Report a user.
+- Report a ride.
+- Report a community.
+- Report an event.
+- Report a message.
+- Block a user.
+- Clear community guidelines.
+- Moderation status.
+- Optional contact verification.
+- Profile privacy settings.
+- A Safety Centre.
+- Public meeting-point guidance.
+- Pre-ride safety reminders.
+- A way to contact support or request moderation review.
+
+Admin moderation actions may include dismissing a report, warning a user, restricting an account, suspending an account, or removing content according to the moderation policy.
+
+Keep an audit trail for moderation actions. Restrict access to sensitive reports.
+
+Never expose a reporter's identity to the reported user by default.
+
+Do not treat a verification badge, review, or compatibility score as a safety guarantee.
+
+# 21. FEATURE FIFTEEN: OPTIONAL TRIP CHECK-INS
+
+Allow confirmed riders to:
+- Mark a trip as started.
+- Check in at an agreed stop.
+- Mark a trip as completed.
+- Share a selected trip summary with a trusted contact if configured.
+
+This is not live emergency monitoring.
+
+Do not implement continuous background location tracking in the initial release. Any future location-sharing feature must be explicit, revocable, permission-based, and designed with clear privacy and retention rules.
+
+# 22. FEATURE SIXTEEN: RIDE MATCH ASSISTANT
+
+Prepare a future-ready assistant experience for queries such as:
+- Find riders travelling towards Goa this weekend.
+- Show local community rides.
+- Help organise a two-day motorcycle trip.
+- Find nearby biker-friendly places.
+- Suggest a checklist for a planned trip.
+
+Use actual listings and reliable services when available. Clearly state when information is unavailable. Never fabricate riders, events, places, or available slots.
+
+If AI integration is not configured, provide a useful search-and-filter interface rather than a non-functional AI chat box.
+
+# 23. PROFILE, SETTINGS, AND ACCOUNT MANAGEMENT
+
+Create:
+- View and edit profile.
+- Profile visibility settings.
+- Riding preferences.
+- My rides.
+- My join requests.
+- My communities.
+- My events.
+- Saved rides.
+- Ride Passport.
+- Notification settings.
+- Blocked users.
+- Account deletion.
+- Sign out.
+
+A user should be able to understand and control the information visible to other riders.
+
+# 24. ADMIN DASHBOARD
+
+Build a restricted administrative interface with:
+- Report queue.
+- Report details.
+- User search and status.
+- Community moderation.
+- Ride and event moderation.
+- Content removal.
+- Warnings and account restrictions.
+- Moderation notes.
+- Audit log.
+- Basic activity metrics.
+
+Use role-based access control enforced by the backend. Hiding an admin button in the frontend is not sufficient security.
+
+# 25. DATABASE AND DATA ENTITIES
+
+Create a coherent data model containing, as appropriate:
+- User.
+- RiderProfile.
+- Ride.
+- RideRequest.
+- RideParticipant.
+- Community.
+- CommunityMembership.
+- Event.
+- EventRSVP.
+- Conversation.
+- ConversationParticipant.
+- Message.
+- Notification.
+- SavedRide.
+- Review or Feedback.
+- Report.
+- ModerationAction.
+- AuditLog.
+- TrustedContact or TripCheckIn if the optional feature is enabled.
+
+Use stable IDs, timestamps, relationships, appropriate indexes, and server-side validation.
+
+Define constraints for:
+- Duplicate join requests.
+- Participant capacity.
+- Community permissions.
+- Event capacity.
+- Authorised messaging.
+- Visibility rules.
+- User blocking.
+- Ride cancellation.
+- Account deletion.
+
+Do not store secrets in public records. Keep sensitive personal data private and limit collection to what the product needs.
+
+# 26. SECURITY, PRIVACY, AND RELIABILITY
+
+Implement:
+- Secure authentication.
+- Server-side authorisation.
+- Input validation.
+- Protection against common web vulnerabilities.
+- Rate limits for sensitive endpoints where supported.
+- Secure environment-variable handling.
+- Error handling without leaking internal secrets.
+- Privacy-aware logging.
+- Account and data deletion workflows.
+- Clear permission handling.
+- Reasonable database access rules.
+- Loading, empty, success, error, and retry states.
+- Responsive layouts for small screens.
+- Accessible forms and navigation.
+
+Never publish a user's precise home address or default live location. Do not log passwords, authentication tokens, or unnecessary precise location data.
+
+Before production, document the privacy policy, terms, retention periods, backup strategy, and required operational controls. Do not claim legal compliance without appropriate review.
+
+# 27. NAVIGATION AND REQUIRED SCREENS
+
+Create a consistent navigation structure with:
+1. Home.
+2. Find Ride.
+3. Create Ride.
+4. Communities.
+5. Events.
+6. Inbox.
+7. Profile.
+8. Safety Centre.
+9. Admin Dashboard for authorised administrators only.
+
+Required screens:
+- Welcome/onboarding.
+- Registration/login.
+- Home dashboard.
+- Ride search and filters.
+- Ride results.
+- Ride details.
+- Create/edit ride.
+- Join-request management.
+- Rider profile.
+- Community directory.
+- Community details.
+- Create/edit community where authorised.
+- Community membership requests.
+- Community feed.
+- Event directory.
+- Event details.
+- Create/edit event.
+- Inbox.
+- Conversation view.
+- Saved rides.
+- Ride Passport.
+- Notifications.
+- Settings/privacy.
+- Safety Centre.
+- Report form.
+- Admin moderation dashboard.
+
+Use clear back navigation, helpful empty states, confirmation dialogs for destructive actions, and consistent page layouts.
+
+# 28. BUSINESS RULES
+
+- Only active rides appear in active search results.
+- Departure dates must be valid and in the future when a new ride is published.
+- Only authorised organisers may edit or cancel their rides.
+- Participant capacity cannot be exceeded.
+- A rider cannot submit duplicate pending requests for the same ride.
+- Community-only content is accessible only to authorised members.
+- Invite-only content requires a valid invitation.
+- Only authorised event organisers can edit or cancel events.
+- Blocked-user restrictions must be enforced by the backend.
+- Messaging permissions must be checked for every conversation.
+- Reports must be recorded and available to authorised moderators.
+- Cancelled rides and events must be clearly marked.
+- Notifications must reflect real application state.
+- Demo content must be labelled and must not be presented as real people or confirmed availability.
+
+# 29. PERFORMANCE AND QUALITY
+
+Aim for:
+- Fast initial rendering.
+- Responsive interaction on mobile and desktop.
+- Efficient queries and pagination for lists.
+- Accessible keyboard and touch interaction.
+- Clear validation messages.
+- Safe handling of network failures.
+- No duplicate submissions on retry.
+- No broken links or non-functional controls.
+- No horizontal overflow on mobile.
+- No severe console errors.
+- Sensible handling of empty databases and new accounts.
+
+# 30. ANALYTICS
+
+Prepare privacy-conscious event tracking for:
+- Registration completed.
+- Profile completed.
+- Ride created.
+- Search performed.
+- Ride details viewed.
+- Join request submitted.
+- Join request accepted or declined.
+- Community joined.
+- Event RSVP submitted.
+- Ride marked completed.
+- Report submitted.
+
+Use aggregate metrics to assess profile completion, ride discovery, join-request conversion, request decision time, completed rides, community participation, retention, and moderation response times.
+
+Do not collect continuous location or message content for ordinary product analytics.
+
+# 31. TESTING REQUIREMENTS
+
+Test these end-to-end flows:
+
+Test A: New user registers, completes a profile, and reaches Home.
+
+Test B: A rider creates a ride and sees it in the appropriate search results.
+
+Test C: Another rider searches, opens the ride, and sends a join request.
+
+Test D: The organiser accepts the request, and the rider sees the updated status.
+
+Test E: Accepted participants can access the correct chat; unauthorised users cannot.
+
+Test F: A user joins an open community and requests membership in a restricted community.
+
+Test G: A community admin approves a membership request and creates an event.
+
+Test H: A user RSVPs and sees the correct event status.
+
+Test I: A user blocks another user, and server-side messaging restrictions work.
+
+Test J: A user submits a report, and an authorised admin can review and resolve it.
+
+Test K: Ride capacity cannot be exceeded, including simultaneous join requests.
+
+Test L: A cancelled ride is removed from active results and participants receive an update.
+
+Test M: Private profile information and precise location are not exposed publicly.
+
+Test N: Network errors and retry attempts do not create duplicate records.
+
+Add automated tests for important business rules where the environment supports them. Run the application, execute available tests, and fix errors.
+
+# 32. DEVELOPMENT PRIORITIES
+
+Build in this order:
+
+PHASE 1 — WORKING MVP:
+- Authentication.
+- Rider profiles.
+- Home screen.
+- Create and search rides.
+- Join requests and organiser approvals.
+- Basic communities.
+- Community membership.
+- Events and RSVP.
+- Messaging or a properly configured messaging implementation.
+- In-app notifications.
+- Reporting, blocking, and admin moderation.
+- Responsive and accessible design.
+
+PHASE 2 — DISTINCTIVE FEATURES:
+- Better route-overlap matching.
+- Meet-in-the-Middle Finder.
+- Partial-route matching.
+- Ride Planner.
+- Biker Spot Finder.
+- Ride Circles.
+- Saved rides and richer community activities.
+
+PHASE 3 — ADVANCED FEATURES:
+- Ride Passport and achievements.
+- Ride Match Assistant.
+- Community challenges.
+- Optional trip check-ins.
+- Advanced recommendations and map integrations.
+
+Do not postpone essential safety and permission controls until a later phase.
+
+# 33. DEMO EXPERIENCE
+
+When the project is first opened in a development environment, provide a clear way to explore the app.
+
+If real authentication and backend services are configured, use them.
+
+Otherwise, provide a clearly labelled demo mode with fictional sample data such as:
+- A Nashik-to-Goa touring ride.
+- A Pune-to-Goa ride with a potentially overlapping route.
+- A Nashik Weekend Riders community.
+- A Scenic Routes community.
+- A sample upcoming group ride.
+- Example join requests and event cards.
+
+Do not use real people's private information or imply demo listings are genuine.
+
+Ensure users can explore the main screens and understand the complete product flow. If demo actions modify data, persist them in the configured demo storage and provide a reset option.
+
+# 34. EXPECTED DELIVERABLES
+
+Create:
+1. The complete working application in the project workspace.
+2. All necessary frontend screens and reusable components.
+3. Backend/API and database implementation when supported by the environment.
+4. Database schema, migrations, or security rules as appropriate.
+5. Seed/demo data.
+6. Environment variable example file without real secrets.
+7. Setup and run instructions in README.md.
+8. API documentation or a clear description of API routes.
+9. A summary of implemented features.
+10. A list of external services and configuration steps required.
+11. Test results and known limitations.
+12. A clear list of unfinished items, if any.
+
+# 35. FINAL EXECUTION INSTRUCTIONS
+
+Begin by inspecting the current project files and available tools.
+
+Then:
+1. State the architecture and implementation plan briefly.
+2. Build the responsive application.
+3. Implement the core end-to-end ride matching flow.
+4. Implement communities, events, messaging, and essential safety features.
+5. Connect real persistence and authentication when available.
+6. Add demo mode only as a clearly labelled fallback.
+7. Test the important user journeys.
+8. Fix compilation and runtime errors.
+9. Provide the exact commands to run the project.
+10. Explain which integrations require API keys or external configuration.
+
+Do not stop after generating a homepage. Do not replace implementation with instructions. Do not claim incomplete features are finished.
+
+The result should be a polished, practical, extensible NEO application that a developer can run, test, and continue developing.
+
+PRODUCT VISION:
+NEO helps bikers find people travelling the same way, discover communities that share their passion, and turn individual journeys into shared experiences.
+
+NEO — Ride Together. Discover More.

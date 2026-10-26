@@ -1,0 +1,6 @@
+{
+  "name": "NEO",
+  "description": "Ride Together. Discover More. Motorcycle rider matching, shared-trip planning, local biker communities, and group ride discovery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

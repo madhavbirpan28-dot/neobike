@@ -1,0 +1,16 @@
+{
+  "firestore": [
+    {
+      "database": "ai-studio-android-neo-434b62b3-121b-4c23-ba44-7c1fd9e36903",
+      "rules": "firestore.rules"
+    }
+  ],
+  "emulators": {
+    "firestore": {
+      "port": 8085
+    },
+    "auth": {
+      "port": 9099
+    }
+  }
+}
