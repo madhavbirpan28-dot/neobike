@@ -79,7 +79,153 @@ class NeoRepository(
     private val _notifications = MutableStateFlow(createInitialNotifications())
     val notifications: StateFlow<List<NotificationItem>> = _notifications.asStateFlow()
 
+    private val _motorcycles = MutableStateFlow(createInitialMotorcycles())
+    val motorcycles: StateFlow<List<Motorcycle>> = _motorcycles.asStateFlow()
+
+    private val _maintenanceRecords = MutableStateFlow(createInitialMaintenanceRecords())
+    val maintenanceRecords: StateFlow<List<MaintenanceRecord>> = _maintenanceRecords.asStateFlow()
+
+    private val _maintenanceReminders = MutableStateFlow(createInitialMaintenanceReminders())
+    val maintenanceReminders: StateFlow<List<MaintenanceReminder>> = _maintenanceReminders.asStateFlow()
+
+    private val _communityPosts = MutableStateFlow(createInitialPosts())
+    val communityPosts: StateFlow<List<CommunityPost>> = _communityPosts.asStateFlow()
+
+    // --- Garage & Bike Maintenance Functions ---
+    fun addMotorcycle(
+        make: String,
+        model: String,
+        year: Int,
+        displacementCc: Int,
+        odometerKm: Int,
+        licensePlate: String,
+        photoEmoji: String,
+        insuranceExpiryDate: String,
+        notes: String
+    ) {
+        val user = _currentUser.value
+        val newBike = Motorcycle(
+            id = "bike_" + UUID.randomUUID().toString().take(8),
+            ownerId = user.id,
+            make = make,
+            model = model,
+            year = year,
+            displacementCc = displacementCc,
+            odometerKm = odometerKm,
+            licensePlate = licensePlate,
+            isPrimary = _motorcycles.value.none { it.ownerId == user.id },
+            photoEmoji = photoEmoji,
+            lastServiceDate = "Just added",
+            nextServiceDueKm = odometerKm + 3000,
+            insuranceExpiryDate = insuranceExpiryDate,
+            notes = notes
+        )
+        _motorcycles.update { it + newBike }
+    }
+
+    fun updateOdometer(bikeId: String, newKm: Int) {
+        _motorcycles.update { list ->
+            list.map { if (it.id == bikeId) it.copy(odometerKm = newKm) else it }
+        }
+    }
+
+    fun addMaintenanceRecord(
+        bikeId: String,
+        serviceType: String,
+        date: String,
+        odometerKm: Int,
+        costAmount: Double,
+        workshopName: String,
+        notes: String
+    ) {
+        val newRecord = MaintenanceRecord(
+            id = "maint_" + UUID.randomUUID().toString().take(8),
+            bikeId = bikeId,
+            serviceType = serviceType,
+            date = date,
+            odometerKm = odometerKm,
+            costAmount = costAmount,
+            workshopName = workshopName,
+            notes = notes
+        )
+        _maintenanceRecords.update { it + newRecord }
+        _motorcycles.update { list ->
+            list.map { if (it.id == bikeId) it.copy(lastServiceDate = date, odometerKm = maxOf(it.odometerKm, odometerKm)) else it }
+        }
+    }
+
+    fun addMaintenanceReminder(bikeId: String, title: String, dueKm: Int, dueDate: String, priority: String) {
+        val newReminder = MaintenanceReminder(
+            id = "rem_" + UUID.randomUUID().toString().take(8),
+            bikeId = bikeId,
+            title = title,
+            dueKm = dueKm,
+            dueDate = dueDate,
+            isCompleted = false,
+            priority = priority
+        )
+        _maintenanceReminders.update { it + newReminder }
+    }
+
+    fun toggleReminderCompleted(reminderId: String) {
+        _maintenanceReminders.update { list ->
+            list.map { if (it.id == reminderId) it.copy(isCompleted = !it.isCompleted) else it }
+        }
+    }
+
+    // --- Community Feed & Posts Functions ---
+    fun createCommunityPost(content: String, location: String, tag: String) {
+        val user = _currentUser.value
+        val newPost = CommunityPost(
+            id = "post_" + UUID.randomUUID().toString().take(8),
+            authorId = user.id,
+            authorName = user.name,
+            authorAvatar = user.avatarEmoji,
+            authorMotorcycle = user.motorcycle,
+            content = content,
+            location = location,
+            timestamp = "Just now",
+            likesCount = 0,
+            likedByCurrentUser = false,
+            comments = emptyList(),
+            tag = tag
+        )
+        _communityPosts.update { listOf(newPost) + it }
+    }
+
+    fun togglePostLike(postId: String) {
+        _communityPosts.update { list ->
+            list.map { post ->
+                if (post.id == postId) {
+                    val newLiked = !post.likedByCurrentUser
+                    val newCount = if (newLiked) post.likesCount + 1 else maxOf(0, post.likesCount - 1)
+                    post.copy(likedByCurrentUser = newLiked, likesCount = newCount)
+                } else post
+            }
+        }
+    }
+
+    fun addPostComment(postId: String, commentText: String) {
+        val user = _currentUser.value
+        val newComment = PostComment(
+            id = "c_" + UUID.randomUUID().toString().take(8),
+            authorId = user.id,
+            authorName = user.name,
+            authorAvatar = user.avatarEmoji,
+            content = commentText,
+            timestamp = "Just now"
+        )
+        _communityPosts.update { list ->
+            list.map { post ->
+                if (post.id == postId) {
+                    post.copy(comments = post.comments + newComment)
+                } else post
+            }
+        }
+    }
+
     // --- User Management & Persona Switching ---
+
     fun switchUser(userId: String) {
         val found = _allUsers.value.find { it.id == userId }
         if (found != null) {
@@ -1129,5 +1275,125 @@ class NeoRepository(
                 type = NotificationType.RIDE_UPDATE
             )
         )
+
+        fun createInitialMotorcycles(): List<Motorcycle> = listOf(
+            Motorcycle(
+                id = "bike_1",
+                ownerId = "user_vikram",
+                make = "Royal Enfield",
+                model = "Himalayan 450",
+                year = 2024,
+                displacementCc = 452,
+                odometerKm = 8450,
+                licensePlate = "MH 15 F 7821",
+                isPrimary = true,
+                photoEmoji = "🏔️",
+                lastServiceDate = "Sep 15, 2026",
+                nextServiceDueKm = 10000,
+                insuranceExpiryDate = "Nov 30, 2027",
+                notes = "Tubeless cross-spoke wheels fitted. Full synthetic Motul 15W50."
+            ),
+            Motorcycle(
+                id = "bike_2",
+                ownerId = "user_vikram",
+                make = "KTM",
+                model = "390 Adventure SW",
+                year = 2023,
+                displacementCc = 373,
+                odometerKm = 14200,
+                licensePlate = "MH 15 FE 4402",
+                isPrimary = false,
+                photoEmoji = "⚡",
+                lastServiceDate = "Aug 10, 2026",
+                nextServiceDueKm = 15000,
+                insuranceExpiryDate = "Aug 12, 2027",
+                notes = "Quickshifter+ calibrated. Metzeler Tourance tyres installed."
+            )
+        )
+
+        fun createInitialMaintenanceRecords(): List<MaintenanceRecord> = listOf(
+            MaintenanceRecord(
+                id = "maint_1",
+                bikeId = "bike_1",
+                serviceType = "Oil & Filter Change + Chain Lube",
+                date = "Sep 15, 2026",
+                odometerKm = 7500,
+                costAmount = 2850.0,
+                workshopName = "RE Authorised Service, Nashik",
+                notes = "1.5L Liquid cooled engine oil flush + air filter element blown clean."
+            ),
+            MaintenanceRecord(
+                id = "maint_2",
+                bikeId = "bike_1",
+                serviceType = "Brake Pad Replacement (Sintered Rear)",
+                date = "Jul 02, 2026",
+                odometerKm = 5200,
+                costAmount = 1900.0,
+                workshopName = "Pitstop Moto Clinic, Igatpuri",
+                notes = "Replaced worn rear pads after heavy wet monsoon riding."
+            )
+        )
+
+        fun createInitialMaintenanceReminders(): List<MaintenanceReminder> = listOf(
+            MaintenanceReminder(
+                id = "rem_1",
+                bikeId = "bike_1",
+                title = "10,000 KM Major Service",
+                dueKm = 10000,
+                dueDate = "Nov 15, 2026",
+                isCompleted = false,
+                priority = "High"
+            ),
+            MaintenanceReminder(
+                id = "rem_2",
+                bikeId = "bike_1",
+                title = "Chain Clean & Waxing",
+                dueKm = 8800,
+                dueDate = "Nov 01, 2026",
+                isCompleted = false,
+                priority = "Medium"
+            )
+        )
+
+        fun createInitialPosts(): List<CommunityPost> = listOf(
+            CommunityPost(
+                id = "post_1",
+                authorId = "user_ananya",
+                authorName = "Ananya Roy",
+                authorAvatar = "👩‍🦰",
+                authorMotorcycle = "KTM Duke 390",
+                content = "Sunsets over Bhandardara Dam are unmatched in October! Road condition from Ghoti turn-off is 90% smooth tarmac. Great cornering practice! 🏞️",
+                location = "Bhandardara Lake, MH",
+                timestamp = "3h ago",
+                likesCount = 14,
+                likedByCurrentUser = true,
+                comments = listOf(
+                    PostComment(
+                        id = "c_1",
+                        authorId = "user_vikram",
+                        authorName = "Vikramaditya Rao",
+                        authorAvatar = "👨‍✈️",
+                        content = "Awesome pics Ananya! Did you notice any gravel on the lake view curve?",
+                        timestamp = "2h ago"
+                    )
+                ),
+                tag = "Route Review"
+            ),
+            CommunityPost(
+                id = "post_2",
+                authorId = "user_rahul",
+                authorName = "Rahul Sharma",
+                authorAvatar = "🧔",
+                authorMotorcycle = "BMW R 1250 GS",
+                content = "Pro tip for monsoon/wet tarmac touring: Lower rear tyre pressure by 2 PSI and always carry a mini tubeless repair kit with CO2 canisters. Saved my trip on Tamhini Ghat yesterday! 🔧",
+                location = "Tamhini Ghat Pass",
+                timestamp = "6h ago",
+                likesCount = 28,
+                likedByCurrentUser = false,
+                comments = emptyList(),
+                tag = "Maintenance Tip"
+            )
+        )
     }
 }
+

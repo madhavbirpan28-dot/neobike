@@ -55,6 +55,8 @@ fun NeoAppRoot(viewModel: NeoViewModel = viewModel()) {
         NeoRoutes.CREATE_RIDE,
         NeoRoutes.COMMUNITIES,
         NeoRoutes.EVENTS,
+        NeoRoutes.FEED,
+        NeoRoutes.GARAGE,
         NeoRoutes.INBOX,
         NeoRoutes.SPOTS,
         NeoRoutes.PASSPORT,
@@ -91,6 +93,8 @@ fun NeoAppRoot(viewModel: NeoViewModel = viewModel()) {
                             MainTab.CREATE_RIDE -> NeoRoutes.CREATE_RIDE
                             MainTab.COMMUNITIES -> NeoRoutes.COMMUNITIES
                             MainTab.EVENTS -> NeoRoutes.EVENTS
+                            MainTab.FEED -> NeoRoutes.FEED
+                            MainTab.GARAGE -> NeoRoutes.GARAGE
                             MainTab.INBOX -> NeoRoutes.INBOX
                             MainTab.SPOTS -> NeoRoutes.SPOTS
                             MainTab.PASSPORT -> NeoRoutes.PASSPORT

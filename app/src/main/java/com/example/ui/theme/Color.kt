@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 val NeoElectricOrange = Color(0xFFFF6B00)
 val NeoElectricOrangeDark = Color(0xFFD95B00)
 val NeoElectricOrangeLight = Color(0xFFFF8533)
+val NeoOrangePrimary = NeoElectricOrange
 
 val NeoCharcoalBackground = Color(0xFF0C0E14)
 val NeoCharcoalSurface = Color(0xFF141822)

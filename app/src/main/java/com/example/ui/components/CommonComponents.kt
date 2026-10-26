@@ -213,9 +213,9 @@ fun NeoBottomNav(
         val primaryTabs = listOf(
             com.example.ui.viewmodel.MainTab.HOME,
             com.example.ui.viewmodel.MainTab.FIND_RIDE,
-            com.example.ui.viewmodel.MainTab.CREATE_RIDE,
-            com.example.ui.viewmodel.MainTab.COMMUNITIES,
-            com.example.ui.viewmodel.MainTab.INBOX,
+            com.example.ui.viewmodel.MainTab.FEED,
+            com.example.ui.viewmodel.MainTab.GARAGE,
+            com.example.ui.viewmodel.MainTab.SPOTS,
             com.example.ui.viewmodel.MainTab.PROFILE
         )
 

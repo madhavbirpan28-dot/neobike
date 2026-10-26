@@ -15,6 +15,8 @@ enum class MainTab(val label: String, val iconEmoji: String) {
     CREATE_RIDE("Post Ride", "➕"),
     COMMUNITIES("Clubs", "👥"),
     EVENTS("Events", "📅"),
+    FEED("Feed", "📰"),
+    GARAGE("Garage", "🏍️"),
     INBOX("Inbox", "💬"),
     SPOTS("Spots", "⛽"),
     PASSPORT("Passport", "🎖️"),
@@ -56,6 +58,49 @@ class NeoViewModel @JvmOverloads constructor(
     val blockedUserIds = repository.blockedUserIds
     val reports = repository.reports
     val notifications = repository.notifications
+    val motorcycles = repository.motorcycles
+    val maintenanceRecords = repository.maintenanceRecords
+    val maintenanceReminders = repository.maintenanceReminders
+    val communityPosts = repository.communityPosts
+
+    // Garage Methods
+    fun addMotorcycle(
+        make: String,
+        model: String,
+        year: Int,
+        displacementCc: Int,
+        odometerKm: Int,
+        licensePlate: String,
+        photoEmoji: String,
+        insuranceExpiryDate: String,
+        notes: String
+    ) = repository.addMotorcycle(make, model, year, displacementCc, odometerKm, licensePlate, photoEmoji, insuranceExpiryDate, notes)
+
+    fun updateOdometer(bikeId: String, newKm: Int) = repository.updateOdometer(bikeId, newKm)
+
+    fun addMaintenanceRecord(
+        bikeId: String,
+        serviceType: String,
+        date: String,
+        odometerKm: Int,
+        costAmount: Double,
+        workshopName: String,
+        notes: String
+    ) = repository.addMaintenanceRecord(bikeId, serviceType, date, odometerKm, costAmount, workshopName, notes)
+
+    fun addMaintenanceReminder(bikeId: String, title: String, dueKm: Int, dueDate: String, priority: String) =
+        repository.addMaintenanceReminder(bikeId, title, dueKm, dueDate, priority)
+
+    fun toggleReminderCompleted(reminderId: String) = repository.toggleReminderCompleted(reminderId)
+
+    // Feed Methods
+    fun createCommunityPost(content: String, location: String, tag: String) =
+        repository.createCommunityPost(content, location, tag)
+
+    fun togglePostLike(postId: String) = repository.togglePostLike(postId)
+
+    fun addPostComment(postId: String, commentText: String) = repository.addPostComment(postId, commentText)
+
 
     // Navigation State
     private val _currentTab = MutableStateFlow(MainTab.HOME)

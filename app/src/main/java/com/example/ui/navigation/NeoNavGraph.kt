@@ -19,6 +19,8 @@ object NeoRoutes {
     const val CREATE_RIDE = "create_ride"
     const val COMMUNITIES = "communities"
     const val EVENTS = "events"
+    const val FEED = "feed"
+    const val GARAGE = "garage"
     const val INBOX = "inbox"
     const val SPOTS = "spots"
     const val PASSPORT = "passport"
@@ -55,6 +57,8 @@ fun NeoNavGraph(
                         MainTab.CREATE_RIDE -> NeoRoutes.CREATE_RIDE
                         MainTab.COMMUNITIES -> NeoRoutes.COMMUNITIES
                         MainTab.EVENTS -> NeoRoutes.EVENTS
+                        MainTab.FEED -> NeoRoutes.FEED
+                        MainTab.GARAGE -> NeoRoutes.GARAGE
                         MainTab.INBOX -> NeoRoutes.INBOX
                         MainTab.SPOTS -> NeoRoutes.SPOTS
                         MainTab.PASSPORT -> NeoRoutes.PASSPORT
@@ -81,6 +85,15 @@ fun NeoNavGraph(
                 }
             )
         }
+
+        composable(NeoRoutes.FEED) {
+            CommunityFeedScreen(viewModel = viewModel)
+        }
+
+        composable(NeoRoutes.GARAGE) {
+            GarageScreen(viewModel = viewModel)
+        }
+
 
         composable(NeoRoutes.FIND_RIDE) {
             FindRideScreen(

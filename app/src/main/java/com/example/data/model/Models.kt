@@ -269,3 +269,67 @@ data class NotificationItem(
     val isRead: Boolean = false,
     val type: NotificationType
 )
+
+data class Motorcycle(
+    val id: String,
+    val ownerId: String,
+    val make: String,
+    val model: String,
+    val year: Int,
+    val displacementCc: Int,
+    val odometerKm: Int,
+    val licensePlate: String = "",
+    val isPrimary: Boolean = true,
+    val photoEmoji: String = "🏍️",
+    val lastServiceDate: String = "",
+    val nextServiceDueKm: Int = 0,
+    val insuranceExpiryDate: String = "",
+    val notes: String = ""
+)
+
+data class MaintenanceRecord(
+    val id: String,
+    val bikeId: String,
+    val serviceType: String, // e.g., "Engine Oil & Filter", "Chain Lube & Tension", "Brake Pad Change"
+    val date: String,
+    val odometerKm: Int,
+    val costAmount: Double,
+    val workshopName: String = "",
+    val notes: String = ""
+)
+
+data class MaintenanceReminder(
+    val id: String,
+    val bikeId: String,
+    val title: String,
+    val dueKm: Int,
+    val dueDate: String,
+    val isCompleted: Boolean = false,
+    val priority: String = "Medium" // "High", "Medium", "Low"
+)
+
+data class CommunityPost(
+    val id: String,
+    val communityId: String? = null,
+    val authorId: String,
+    val authorName: String,
+    val authorAvatar: String,
+    val authorMotorcycle: String,
+    val content: String,
+    val location: String = "",
+    val timestamp: String,
+    val likesCount: Int = 0,
+    val likedByCurrentUser: Boolean = false,
+    val comments: List<PostComment> = emptyList(),
+    val tag: String = "General" // "Ride Story", "Maintenance Tip", "Route Review", "General"
+)
+
+data class PostComment(
+    val id: String,
+    val authorId: String,
+    val authorName: String,
+    val authorAvatar: String,
+    val content: String,
+    val timestamp: String
+)
+
