@@ -2,7 +2,6 @@ package com.example
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -12,8 +11,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.ui.components.*
-import com.example.ui.screens.*
+import com.example.ui.navigation.NeoNavGraph
+import com.example.ui.navigation.NeoRoutes
 import com.example.ui.theme.NeoTheme
 import com.example.ui.viewmodel.MainTab
 import com.example.ui.viewmodel.NeoViewModel
@@ -32,20 +34,32 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun NeoAppRoot(viewModel: NeoViewModel = viewModel()) {
+    val navController = rememberNavController()
     val currentUser by viewModel.currentUser.collectAsState()
     val allUsers by viewModel.allUsers.collectAsState()
     val currentTab by viewModel.currentTab.collectAsState()
-    val selectedRideId by viewModel.selectedRideId.collectAsState()
-    val selectedCommunityId by viewModel.selectedCommunityId.collectAsState()
-    val selectedConversationId by viewModel.selectedConversationId.collectAsState()
-    val showSafetyCenter by viewModel.showSafetyCenter.collectAsState()
-    val showAdminDashboard by viewModel.showAdminDashboard.collectAsState()
     val showNotifications by viewModel.showNotifications.collectAsState()
     val showPersonaSwitcher by viewModel.showPersonaSwitcher.collectAsState()
     val reportTarget by viewModel.reportTarget.collectAsState()
     val notifications by viewModel.notifications.collectAsState()
 
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     val unreadNotifs = notifications.count { !it.isRead }
+
+    // Synchronize bottom nav with current tab state
+    val isPrimaryTabRoute = currentRoute in listOf(
+        NeoRoutes.HOME,
+        NeoRoutes.FIND_RIDE,
+        NeoRoutes.CREATE_RIDE,
+        NeoRoutes.COMMUNITIES,
+        NeoRoutes.EVENTS,
+        NeoRoutes.INBOX,
+        NeoRoutes.SPOTS,
+        NeoRoutes.PASSPORT,
+        NeoRoutes.PROFILE
+    ) || currentRoute == null
 
     Scaffold(
         topBar = {
@@ -54,17 +68,40 @@ fun NeoAppRoot(viewModel: NeoViewModel = viewModel()) {
                 unreadNotifCount = unreadNotifs,
                 onOpenNotifications = { viewModel.toggleNotifications(true) },
                 onOpenPersonaSwitcher = { viewModel.togglePersonaSwitcher(true) },
-                onOpenSafetyCenter = { viewModel.openSafetyCenter() },
-                onOpenAdminDashboard = { viewModel.openAdminDashboard() },
+                onOpenSafetyCenter = {
+                    viewModel.openSafetyCenter()
+                    navController.navigate(NeoRoutes.SAFETY_CENTER)
+                },
+                onOpenAdminDashboard = {
+                    viewModel.openAdminDashboard()
+                    navController.navigate(NeoRoutes.ADMIN_DASHBOARD)
+                },
                 onResetData = { viewModel.resetDemoData() }
             )
         },
         bottomBar = {
-            // Hide bottom bar on sub-screens like chat or ride detail if desired, or keep it accessible
-            if (selectedRideId == null && !showSafetyCenter && !showAdminDashboard && selectedConversationId == null) {
+            if (isPrimaryTabRoute) {
                 NeoBottomNav(
                     currentTab = currentTab,
-                    onTabSelected = { viewModel.selectTab(it) }
+                    onTabSelected = { tab ->
+                        viewModel.selectTab(tab)
+                        val targetRoute = when (tab) {
+                            MainTab.HOME -> NeoRoutes.HOME
+                            MainTab.FIND_RIDE -> NeoRoutes.FIND_RIDE
+                            MainTab.CREATE_RIDE -> NeoRoutes.CREATE_RIDE
+                            MainTab.COMMUNITIES -> NeoRoutes.COMMUNITIES
+                            MainTab.EVENTS -> NeoRoutes.EVENTS
+                            MainTab.INBOX -> NeoRoutes.INBOX
+                            MainTab.SPOTS -> NeoRoutes.SPOTS
+                            MainTab.PASSPORT -> NeoRoutes.PASSPORT
+                            MainTab.PROFILE -> NeoRoutes.PROFILE
+                        }
+                        navController.navigate(targetRoute) {
+                            popUpTo(NeoRoutes.HOME) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
                 )
             }
         },
@@ -76,101 +113,10 @@ fun NeoAppRoot(viewModel: NeoViewModel = viewModel()) {
                 .padding(innerPadding)
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            when {
-                // Secondary Full-Screen Destinations with BackHandler
-                showSafetyCenter -> {
-                    SafetyCenterScreen(
-                        viewModel = viewModel,
-                        onBack = { viewModel.closeSafetyCenter() }
-                    )
-                }
-                showAdminDashboard -> {
-                    AdminDashboardScreen(
-                        viewModel = viewModel,
-                        onBack = { viewModel.closeAdminDashboard() }
-                    )
-                }
-                selectedRideId != null -> {
-                    RideDetailScreen(
-                        rideId = selectedRideId!!,
-                        viewModel = viewModel,
-                        onBack = { viewModel.closeRideDetail() },
-                        onOpenChat = { convId ->
-                            viewModel.closeRideDetail()
-                            viewModel.selectTab(MainTab.INBOX)
-                            viewModel.openConversation(convId)
-                        }
-                    )
-                }
-                // Primary Tab Destinations
-                currentTab == MainTab.HOME -> {
-                    HomeScreen(
-                        viewModel = viewModel,
-                        onNavigateTab = { viewModel.selectTab(it) },
-                        onOpenRideDetail = { viewModel.openRideDetail(it) },
-                        onOpenCommunityDetail = {
-                            viewModel.selectTab(MainTab.COMMUNITIES)
-                            viewModel.openCommunityDetail(it)
-                        },
-                        onOpenEventDetail = {
-                            viewModel.selectTab(MainTab.EVENTS)
-                            viewModel.openEventDetail(it)
-                        }
-                    )
-                }
-                currentTab == MainTab.FIND_RIDE -> {
-                    FindRideScreen(
-                        viewModel = viewModel,
-                        onOpenRideDetail = { viewModel.openRideDetail(it) }
-                    )
-                }
-                currentTab == MainTab.CREATE_RIDE -> {
-                    CreateRideScreen(
-                        viewModel = viewModel,
-                        onRideCreated = { newRideId ->
-                            viewModel.openRideDetail(newRideId)
-                        }
-                    )
-                }
-                currentTab == MainTab.COMMUNITIES -> {
-                    CommunitiesScreen(
-                        viewModel = viewModel,
-                        selectedCommunityId = selectedCommunityId,
-                        onOpenCommunityDetail = { viewModel.openCommunityDetail(it) },
-                        onCloseCommunityDetail = { viewModel.closeCommunityDetail() },
-                        onOpenEventDetail = {
-                            viewModel.selectTab(MainTab.EVENTS)
-                            viewModel.openEventDetail(it)
-                        }
-                    )
-                }
-                currentTab == MainTab.EVENTS -> {
-                    EventsScreen(viewModel = viewModel)
-                }
-                currentTab == MainTab.INBOX -> {
-                    InboxScreen(
-                        viewModel = viewModel,
-                        selectedConversationId = selectedConversationId,
-                        onOpenConversation = { viewModel.openConversation(it) },
-                        onCloseConversation = { viewModel.closeConversation() },
-                        onOpenRideDetail = { viewModel.openRideDetail(it) }
-                    )
-                }
-                currentTab == MainTab.SPOTS -> {
-                    BikerSpotsScreen(viewModel = viewModel)
-                }
-                currentTab == MainTab.PASSPORT -> {
-                    PassportScreen(viewModel = viewModel)
-                }
-                currentTab == MainTab.PROFILE -> {
-                    ProfileScreen(
-                        viewModel = viewModel,
-                        onOpenSafetyCenter = { viewModel.openSafetyCenter() },
-                        onOpenAdminDashboard = { viewModel.openAdminDashboard() },
-                        onOpenPersonaSwitcher = { viewModel.togglePersonaSwitcher(true) }
-                    )
-                }
-            }
+            NeoNavGraph(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
     }
 

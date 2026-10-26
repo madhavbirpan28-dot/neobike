@@ -202,7 +202,11 @@ class NeoFirestoreManager(
                 }
             }
             .catch { e ->
-                Log.d(TAG, "Active rides snapshot query finished or unavailable: ${e.message}")
+                if (e is kotlinx.coroutines.CancellationException) {
+                    Log.d(TAG, "Active rides flow cancelled normally.")
+                } else {
+                    Log.w(TAG, "Active rides snapshot query exception: ${e.message}")
+                }
                 emit(emptyList())
             }
     }
