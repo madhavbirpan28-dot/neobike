@@ -11,38 +11,45 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+/**
+ * Material 3 Dark Color Scheme for NEO Biker Application.
+ * Featuring Charcoal Background (`NeoCharcoalBackground`) and Electric Orange Accents (`NeoElectricOrange`).
+ */
 private val DarkColorScheme = darkColorScheme(
-    primary = NeoTealPrimary,
-    onPrimary = Color(0xFF042F2E),
-    primaryContainer = NeoTealDark,
-    onPrimaryContainer = Color(0xFFCCFBF1),
-    secondary = NeoAmberAccent,
-    onSecondary = Color(0xFF451A03),
-    secondaryContainer = NeoAmberDark,
-    onSecondaryContainer = Color(0xFFFEF3C7),
-    tertiary = NeoTealLight,
-    onTertiary = Color(0xFF042F2E),
-    background = NeoDarkBackground,
+    primary = NeoElectricOrange,
+    onPrimary = Color.White,
+    primaryContainer = NeoElectricOrangeDark,
+    onPrimaryContainer = Color(0xFFFFECE0),
+    secondary = NeoElectricOrangeLight,
+    onSecondary = Color(0xFF331400),
+    secondaryContainer = Color(0xFF4A1F00),
+    onSecondaryContainer = Color(0xFFFFDBC6),
+    tertiary = NeoElectricOrangeLight,
+    onTertiary = Color.White,
+    background = NeoCharcoalBackground,
     onBackground = NeoDarkTextPrimary,
-    surface = NeoDarkSurface,
+    surface = NeoCharcoalSurface,
     onSurface = NeoDarkTextPrimary,
-    surfaceVariant = NeoDarkSurfaceElevated,
+    surfaceVariant = NeoCharcoalSurfaceElevated,
     onSurfaceVariant = NeoDarkTextSecondary,
     outline = NeoDarkBorder,
     error = NeoError,
     onError = Color.White
 )
 
+/**
+ * Material 3 Light Color Scheme for NEO Biker Application.
+ */
 private val LightColorScheme = lightColorScheme(
-    primary = NeoTealDark,
+    primary = NeoElectricOrange,
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFCCFBF1),
-    onPrimaryContainer = Color(0xFF115E59),
-    secondary = NeoAmberDark,
+    primaryContainer = Color(0xFFFFECE0),
+    onPrimaryContainer = Color(0xFF662600),
+    secondary = NeoElectricOrangeDark,
     onSecondary = Color.White,
-    secondaryContainer = Color(0xFFFEF3C7),
-    onSecondaryContainer = Color(0xFF78350F),
-    tertiary = NeoTealPrimary,
+    secondaryContainer = Color(0xFFFFDBC6),
+    onSecondaryContainer = Color(0xFF4A1F00),
+    tertiary = NeoElectricOrange,
     onTertiary = Color.White,
     background = NeoLightBackground,
     onBackground = NeoLightTextPrimary,
@@ -57,8 +64,8 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun NeoTheme(
-    darkTheme: Boolean = true, // Default to sleek touring dark theme as preferred by prompt
-    dynamicColor: Boolean = false, // Keep distinct NEO brand identity
+    darkTheme: Boolean = true, // Default to sleek touring dark charcoal theme
+    dynamicColor: Boolean = false, // Preserve distinct NEO brand identity
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -86,3 +93,4 @@ fun MyApplicationTheme(
 ) {
     NeoTheme(darkTheme = darkTheme, dynamicColor = dynamicColor, content = content)
 }
+
